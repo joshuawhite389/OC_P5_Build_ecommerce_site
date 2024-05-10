@@ -21,7 +21,7 @@ let product = {
     quantity: "",
     color: "",
 };
-let cart = JSON.parse(localStorage.getItem("cart"));
+// let cart = JSON.parse(localStorage.getItem("cart"));
 
 //event listeners
 addToCartBtn.addEventListener("click", () => {
@@ -75,24 +75,38 @@ const loadProductInfo = (data) => {
 };
 
 const addProductToCart = () => {
-    console.log(product);
+    //add cart and product to local storage
+    localStorage.setItem("localProduct", JSON.stringify(product));
     if (!localStorage.getItem("cart")) {
         localStorage.setItem("cart", "[]");
     }
-    
-    
-    if(cart.length === 0) {
-        cart.push(product);
+
+    //get references to cart and local storage product to update
+    let localProduct = JSON.parse(localStorage.getItem("localProduct"));
+    let cart = JSON.parse(localStorage.getItem("cart"));
+
+    //if cart is empty, just push the product to cart
+    //else if pushing same item, update quantity
+    if (cart.length === 0) {
+        cart.push(localProduct);
     } else {
-        
+        let found = false;
+        cart.some((cartItem) => {
+            if (
+                JSON.stringify(cartItem.id) ===
+                    JSON.stringify(localProduct.id) &&
+                JSON.stringify(cartItem.color) ===
+                    JSON.stringify(localProduct.color)
+            ) {
+                cartItem.quantity = localProduct.quantity;
+                found = true;
+            }
+        });
+
+        if (!found) {
+            cart.push(localProduct);
+        }
     }
 
-    
-    // else, check item's id and color
-    // if you can find that item in cart, += quantity of new product
-    
     localStorage.setItem("cart", JSON.stringify(cart));
-
-    // localStorage.setItem("products", JSON.stringify(product));
-    
 };
