@@ -98,7 +98,10 @@ const addProductToCart = () => {
                 JSON.stringify(cartItem.color) ===
                     JSON.stringify(localProduct.color)
             ) {
-                cartItem.quantity = localProduct.quantity;
+                cartItem.quantity = (
+                    parseInt(cartItem.quantity) +
+                    parseInt(localProduct.quantity)
+                ).toString();
                 found = true;
             }
         });
