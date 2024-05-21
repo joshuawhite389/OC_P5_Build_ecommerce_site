@@ -9,31 +9,30 @@ const getProductId = () => {
 };
 
 // variables
-const imgContainer = document.getElementsByClassName("item__img")[0];
-const title = document.getElementById("title");
-const price = document.getElementById("price");
-const description = document.getElementById("description");
-const colorPicker = document.getElementById("colors");
-const addToCartBtn = document.getElementById("addToCart");
-const quantity = document.getElementById("quantity");
+const imgContainer = document.getElementsByClassName('item__img')[0];
+const title = document.getElementById('title');
+const price = document.getElementById('price');
+const description = document.getElementById('description');
+const colorPicker = document.getElementById('colors');
+const addToCartBtn = document.getElementById('addToCart');
+const quantity = document.getElementById('quantity');
 let product = {
     id: getProductId(),
-    quantity: "",
-    color: "",
+    quantity: '',
+    color: '',
 };
-// let cart = JSON.parse(localStorage.getItem("cart"));
 
 //event listeners
-addToCartBtn.addEventListener("click", () => {
+addToCartBtn.addEventListener('click', () => {
     addProductToCart();
 });
-colorPicker.addEventListener("change", () => {
+colorPicker.addEventListener('change', () => {
     product = {
         ...product,
         color: colorPicker.value,
     };
 });
-quantity.addEventListener("change", () => {
+quantity.addEventListener('change', () => {
     product = {
         ...product,
         quantity: quantity.value,
@@ -41,7 +40,7 @@ quantity.addEventListener("change", () => {
 });
 
 // fetch data from product that was selected
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const prodId = getProductId();
     try {
         const response = await fetch(
@@ -56,10 +55,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // populate product page with info from product api
 const loadProductInfo = (data) => {
-    const productImg = document.createElement("img");
+    const productImg = document.createElement('img');
 
     data.colors.forEach((element) => {
-        const colorOption = document.createElement("option");
+        const colorOption = document.createElement('option');
         colorOption.value = element;
         colorOption.innerText = element;
         colorPicker.appendChild(colorOption);
@@ -75,41 +74,47 @@ const loadProductInfo = (data) => {
 };
 
 const addProductToCart = () => {
-    //add cart and product to local storage
-    localStorage.setItem("localProduct", JSON.stringify(product));
-    if (!localStorage.getItem("cart")) {
-        localStorage.setItem("cart", "[]");
+    //add product to local storage after validating
+    if (product.quantity > 0 && product.color != null) {
+        localStorage.setItem('localProduct', JSON.stringify(product));
+    }
+
+    //add cart to local storage
+    if (!localStorage.getItem('cart')) {
+        localStorage.setItem('cart', '[]');
     }
 
     //get references to cart and local storage product to update
-    let localProduct = JSON.parse(localStorage.getItem("localProduct"));
-    let cart = JSON.parse(localStorage.getItem("cart"));
+    let localProduct = JSON.parse(localStorage.getItem('localProduct'));
+    let cart = JSON.parse(localStorage.getItem('cart'));
 
     //if cart is empty, just push the product to cart
     //else if pushing same item, update quantity
-    if (cart.length === 0) {
-        cart.push(localProduct);
-    } else {
-        let found = false;
-        cart.some((cartItem) => {
-            if (
-                JSON.stringify(cartItem.id) ===
-                    JSON.stringify(localProduct.id) &&
-                JSON.stringify(cartItem.color) ===
-                    JSON.stringify(localProduct.color)
-            ) {
-                cartItem.quantity = (
-                    parseInt(cartItem.quantity) +
-                    parseInt(localProduct.quantity)
-                ).toString();
-                found = true;
-            }
-        });
-
-        if (!found) {
+    if (localProduct != null) {
+        if (cart.length === 0) {
             cart.push(localProduct);
+        } else {
+            let found = false;
+            cart.some((cartItem) => {
+                if (
+                    JSON.stringify(cartItem.id) ===
+                        JSON.stringify(localProduct.id) &&
+                    JSON.stringify(cartItem.color) ===
+                        JSON.stringify(localProduct.color)
+                ) {
+                    cartItem.quantity = (
+                        parseInt(cartItem.quantity) +
+                        parseInt(localProduct.quantity)
+                    ).toString();
+                    found = true;
+                }
+            });
+
+            if (!found) {
+                cart.push(localProduct);
+            }
         }
     }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(cart));
 };
