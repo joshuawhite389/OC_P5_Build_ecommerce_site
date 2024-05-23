@@ -13,7 +13,7 @@ cart.forEach((item) => {
             );
             const data = await response.json();
             populateCart(data, item);
-            updateTotalQuantityAndPrice();
+            updateTotalQuantityAndPrice(data);
         } catch (error) {
             console.log(error);
         }
@@ -44,7 +44,6 @@ function populateCart(data, item) {
     const color = document.createElement('p');
     color.textContent = item.color;
     const price = document.createElement('p');
-    price.textContent = `€${data.price}`;
 
     const contentSettings = document.createElement('div');
     contentSettings.classList.add('cart__item__content__settings');
@@ -62,6 +61,8 @@ function populateCart(data, item) {
     quantityInput.min = 1;
     quantityInput.max = 100;
     quantityInput.value = item.quantity;
+
+    price.textContent = `€${data.price * item.quantity}`;
 
     const deleteContainer = document.createElement('div');
     deleteContainer.classList.add('cart__item__content__settings__delete');
@@ -119,11 +120,12 @@ function handleDeleteItem(article) {
 }
 
 function updateTotalQuantityAndPrice() {
-    let price;
+    let price = 0;
     let quantity = 0;
     cart.forEach((item) => {
         quantity += Number(item.quantity);
         totalItemQuantity.innerText = quantity;
-        price 
+        price += item.price * item.quantity;
+        totalItemPrice.innerText = price;
     });
 }
