@@ -1,4 +1,6 @@
 let cart = JSON.parse(localStorage.getItem('cart'));
+const totalItemQuantity = document.getElementById('totalQuantity');
+const totalItemPrice = document.getElementById('totalPrice');
 
 // fetch data from products that were added to cart
 
@@ -11,6 +13,7 @@ cart.forEach((item) => {
             );
             const data = await response.json();
             populateCart(data, item);
+            updateTotalQuantityAndPrice();
         } catch (error) {
             console.log(error);
         }
@@ -95,6 +98,7 @@ function handleUpdateQuantity(article, event) {
         if (item.color === updatedItemColor && item.id === updatedItemId) {
             item.quantity = event.target.value;
             localStorage.setItem('cart', JSON.stringify(cart));
+            updateTotalQuantityAndPrice();
         }
     });
 }
@@ -109,6 +113,17 @@ function handleDeleteItem(article) {
             console.log(item);
             localStorage.setItem('cart', JSON.stringify(cart));
             location.reload();
+            updateTotalQuantityAndPrice();
         }
+    });
+}
+
+function updateTotalQuantityAndPrice() {
+    let price;
+    let quantity = 0;
+    cart.forEach((item) => {
+        quantity += Number(item.quantity);
+        totalItemQuantity.innerText = quantity;
+        price 
     });
 }
