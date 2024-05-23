@@ -1,6 +1,14 @@
 let cart = JSON.parse(localStorage.getItem('cart'));
 const totalItemQuantity = document.getElementById('totalQuantity');
 const totalItemPrice = document.getElementById('totalPrice');
+let firstName = document.getElementById('firstName');
+let lastName = document.getElementById('lastName');
+let address = document.getElementById('address');
+let city = document.getElementById('city');
+let email = document.getElementById('email');
+let orderBtn = document.getElementById('order');
+
+getCustomerInput();
 
 // fetch data from products that were added to cart
 
@@ -128,4 +136,65 @@ function updateTotalQuantityAndPrice() {
         price += item.price * item.quantity;
         totalItemPrice.innerText = price;
     });
+}
+
+let userInput = {
+    firstName,
+    lastName,
+    address,
+    city,
+    email,
+};
+
+function getCustomerInput() {
+    firstName.addEventListener('input', (event) =>
+        handleUserInput(event, 'firstName')
+    );
+    firstName.addEventListener('blur', (event) =>
+        inputValidation(event, 'firstName')
+    );
+    lastName.addEventListener('input', (event) =>
+        handleUserInput(event, 'lastName')
+    );
+    lastName.addEventListener('blur', (event) =>
+        inputValidation(event, 'lastName')
+    );
+    address.addEventListener('input', (event) =>
+        handleUserInput(event, 'address')
+    );
+    address.addEventListener('blur', (event) =>
+        inputValidation(event, 'address')
+    );
+    city.addEventListener('input', (event) => handleUserInput(event, 'city'));
+    city.addEventListener('blur', (event) => inputValidation(event, 'city'));
+    email.addEventListener('input', (event) => handleUserInput(event, 'email'));
+    email.addEventListener('blur', (event) => inputValidation(event, 'email'));
+    orderBtn.addEventListener('click', (event) => handleSubmitForm(event));
+}
+
+function inputValidation(event, field) {
+    const errorMsg = document.getElementById(`${field}ErrorMsg`);
+    if (field === 'email') {
+        
+    }
+    if (event.target.value === '') {
+        errorMsg.innerText = 'Field must not be blank';
+    }
+}
+
+function handleUserInput(event, field) {
+    userInput = {
+        ...userInput,
+        [field]: event.target.value,
+    };
+}
+
+function handleSubmitForm(event) {
+    event.preventDefault();
+    // post payload to api
+    firstName.value = '';
+    lastName.value = '';
+    address.value = '';
+    city.value = '';
+    email.value = '';
 }
