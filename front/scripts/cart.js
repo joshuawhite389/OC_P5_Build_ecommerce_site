@@ -11,7 +11,6 @@ cart.forEach((item) => {
             );
             const data = await response.json();
             populateCart(data, item);
-            listenForQuantityUpdate();
         } catch (error) {
             console.log(error);
         }
@@ -51,6 +50,9 @@ function populateCart(data, item) {
     const quantity = document.createElement('p');
     quantity.textContent = 'Quantity: ';
     const quantityInput = document.createElement('input');
+    quantityInput.addEventListener('change', (event) =>
+        handleUpdateQuantity(quantityInput.closest('article'), event)
+    );
     quantityInput.type = 'number';
     quantityInput.classList.add('itemQuantity');
     quantityInput.name = 'itemQuantity';
@@ -62,6 +64,9 @@ function populateCart(data, item) {
     deleteContainer.classList.add('cart__item__content__settings__delete');
 
     const deleteItem = document.createElement('p');
+    deleteItem.addEventListener('click', () =>
+        handleDeleteItem(deleteItem.closest('article'))
+    );
     deleteItem.classList.add('deleteItem');
     deleteItem.textContent = 'Delete';
 
@@ -82,18 +87,28 @@ function populateCart(data, item) {
     deleteContainer.appendChild(deleteItem);
 }
 
-// add listener to update field
-function listenForQuantityUpdate() {
-    const updateQuantityField = document.querySelectorAll(
-        '.cart__item__content__settings__quantity'
-    );
-
-    updateQuantityField.forEach((input) => {
-        input.addEventListener('change', handleUpdateQuantity);
+// update cart item quantity where that field was updated
+function handleUpdateQuantity(article, event) {
+    const updatedItemId = article.getAttribute('data-id');
+    const updatedItemColor = article.getAttribute('data-color');
+    cart.forEach((item) => {
+        if (item.color === updatedItemColor && item.id === updatedItemId) {
+            item.quantity = event.target.value;
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
     });
 }
 
-// update cart item quantity where that field was updated
-function handleUpdateQuantity(event) {
-    console.log(event.target.value);
+function handleDeleteItem(article) {
+    const updatedItemId = article.getAttribute('data-id');
+    const updatedItemColor = article.getAttribute('data-color');
+    cart.forEach((item) => {
+        if (item.color === updatedItemColor && item.id === updatedItemId) {
+            const itemIndex = cart.indexOf(item);
+            cart.splice(cart.indexOf(itemIndex, itemIndex));
+            console.log(item);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            location.reload();
+        }
+    });
 }

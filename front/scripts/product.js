@@ -75,7 +75,7 @@ const loadProductInfo = (data) => {
 
 const addProductToCart = () => {
     //add product to local storage after validating
-    if (product.quantity > 0 && product.color != null) {
+    if (product.quantity > 0 && product.color != '') {
         localStorage.setItem('localProduct', JSON.stringify(product));
     }
 
@@ -90,7 +90,7 @@ const addProductToCart = () => {
 
     //if cart is empty, just push the product to cart
     //else if pushing same item, update quantity
-    if (localProduct != null) {
+    if (localProduct != null && product.quantity > 0 && product.color != '') {
         if (cart.length === 0) {
             cart.push(localProduct);
         } else {
