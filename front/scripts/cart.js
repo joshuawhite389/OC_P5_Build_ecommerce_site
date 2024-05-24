@@ -134,15 +134,8 @@ function handleDeleteItem(article) {
         if (item.color === updatedItemColor && item.id === updatedItemId) {
             const itemIndex = cart.indexOf(item);
             cart.splice(cart.indexOf(itemIndex, itemIndex));
-            console.log(item);
             localStorage.setItem('cart', JSON.stringify(cart));
-            location.reload();
-
-
-            //remove item from DOM instead of reloading
-
-
-            
+            article.remove();
             updateTotalQuantityAndPrice();
         }
     });
@@ -154,12 +147,17 @@ function handleDeleteItem(article) {
 function updateTotalQuantityAndPrice() {
     let price = 0;
     let quantity = 0;
-    cart.forEach((item) => {
-        quantity += Number(item.quantity);
-        totalItemQuantity.innerText = quantity;
-        price += item.price * item.quantity;
-        totalItemPrice.innerText = price;
-    });
+    if (cart.length === 0) {
+        totalItemQuantity.innerText = 0;
+        totalItemPrice.innerText = 0;
+    } else {
+        cart.forEach((item) => {
+            quantity += Number(item.quantity);
+            totalItemQuantity.innerText = quantity;
+            price += item.price * item.quantity;
+            totalItemPrice.innerText = price;
+        });
+    }
 }
 
 let userInput = {
