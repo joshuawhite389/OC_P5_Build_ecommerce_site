@@ -1,3 +1,4 @@
+// setting global variables
 let cart = JSON.parse(localStorage.getItem('cart'));
 const totalItemQuantity = document.getElementById('totalQuantity');
 const totalItemPrice = document.getElementById('totalPrice');
@@ -10,8 +11,10 @@ let orderBtn = document.getElementById('order');
 
 getCustomerInput();
 
-// fetch data from products that were added to cart
-
+/**
+ * Fetches product information for each item in the cart and populates the cart with the data.
+ * @param {Object} item - The item in the cart.
+ */
 cart.forEach((item) => {
     document.addEventListener('DOMContentLoaded', async () => {
         try {
@@ -28,7 +31,11 @@ cart.forEach((item) => {
     });
 });
 
-// populate page with cart info
+/**
+ * Populates the cart with item information fetched from the server.
+ * @param {Object} data - The product data fetched from the server.
+ * @param {Object} item - The item information from the cart.
+ */
 function populateCart(data, item) {
     const cartItems = document.getElementById('cart__items');
     const cartItem = document.createElement('article');
@@ -99,7 +106,11 @@ function populateCart(data, item) {
     deleteContainer.appendChild(deleteItem);
 }
 
-// update cart item quantity where that field was updated
+/**
+ * Updates the quantity of a specific cart item based on the input event.
+ * @param {HTMLElement} article - The article element representing the cart item.
+ * @param {Event} event - The input event triggering the quantity update.
+ */
 function handleUpdateQuantity(article, event) {
     const updatedItemId = article.getAttribute('data-id');
     const updatedItemColor = article.getAttribute('data-color');
@@ -112,6 +123,10 @@ function handleUpdateQuantity(article, event) {
     });
 }
 
+/**
+ * Handles deleting an item from the cart based on the provided article element.
+ * @param {HTMLElement} article - The article element representing the item to be deleted.
+ */
 function handleDeleteItem(article) {
     const updatedItemId = article.getAttribute('data-id');
     const updatedItemColor = article.getAttribute('data-color');
@@ -122,11 +137,20 @@ function handleDeleteItem(article) {
             console.log(item);
             localStorage.setItem('cart', JSON.stringify(cart));
             location.reload();
+
+
+            //remove item from DOM instead of reloading
+
+
+            
             updateTotalQuantityAndPrice();
         }
     });
 }
 
+/**
+ * Updates the total quantity and price displayed in the cart.
+ */
 function updateTotalQuantityAndPrice() {
     let price = 0;
     let quantity = 0;
@@ -146,6 +170,9 @@ let userInput = {
     email,
 };
 
+/**
+ * Handles user input events for the customer details form fields.
+ */
 function getCustomerInput() {
     firstName.addEventListener('input', (event) =>
         handleUserInput(event, 'firstName')
@@ -172,6 +199,12 @@ function getCustomerInput() {
     orderBtn.addEventListener('click', (event) => handleSubmitForm(event));
 }
 
+/**
+ * Validates the input for the specified field and displays error messages if needed.
+ * @param {Event} event - The input event.
+ * @param {string} field - The field being validated.
+ */
+
 function inputValidation(event, field) {
     const errorMsg = document.getElementById(`${field}ErrorMsg`);
     if (field === 'email') {
@@ -188,10 +221,20 @@ function inputValidation(event, field) {
     }
 }
 
+/**
+ * Validates an email address using a regular expression.
+ * @param {string} email - The email address to validate.
+ * @returns {boolean} - True if the email is valid, false otherwise.
+ */
 function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
+/**
+ * Handles user input events for the customer details form fields.
+ * @param {Event} event - The input event.
+ * @param {string} field - The field being updated.
+ */
 
 function handleUserInput(event, field) {
     userInput = {
@@ -200,6 +243,10 @@ function handleUserInput(event, field) {
     };
 }
 
+/**
+ * Handles the form submission event for the customer details form.
+ * @param {Event} event - The form submission event.
+ */
 function handleSubmitForm(event) {
     event.preventDefault();
     // post payload to api
