@@ -175,11 +175,22 @@ function getCustomerInput() {
 function inputValidation(event, field) {
     const errorMsg = document.getElementById(`${field}ErrorMsg`);
     if (field === 'email') {
-        
+        if (!validateEmail(event.target.value)) {
+            errorMsg.innerText = 'Please enter a valid email';
+        } else {
+            errorMsg.innerText = '';
+        }
     }
     if (event.target.value === '') {
         errorMsg.innerText = 'Field must not be blank';
+    } else if (field !== 'email') {
+        errorMsg.innerText = '';
     }
+}
+
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
 }
 
 function handleUserInput(event, field) {
