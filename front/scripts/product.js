@@ -20,8 +20,11 @@ let product = {
     id: getProductId(),
     quantity: '',
     color: '',
-    price: '',
 };
+
+/*
+    DO NOT STORE PRICE IN LOCAL STORAGE
+*/
 
 //event listeners
 addToCartBtn.addEventListener('click', () => {
@@ -69,10 +72,7 @@ const loadProductInfo = (data) => {
     productImg.alt = data.altTxt;
     title.innerText = data.name;
     price.innerText = data.price;
-    product = {
-        ...product,
-        price: data.price,
-    };
+    
     description.innerText = data.description;
 
     imgContainer.appendChild(productImg);

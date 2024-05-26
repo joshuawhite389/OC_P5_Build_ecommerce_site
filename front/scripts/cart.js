@@ -24,7 +24,7 @@ cart.forEach((item) => {
             );
             const data = await response.json();
             populateCart(data, item);
-            updateTotalQuantityAndPrice(data);
+            updateTotalQuantityAndPrice();
         } catch (error) {
             console.log(error);
         }
@@ -132,8 +132,10 @@ function handleDeleteItem(article) {
     const updatedItemColor = article.getAttribute('data-color');
     cart.forEach((item) => {
         if (item.color === updatedItemColor && item.id === updatedItemId) {
-            const itemIndex = cart.indexOf(item);
-            cart.splice(cart.indexOf(itemIndex, itemIndex));
+            cart = cart.filter(
+                (item) =>
+                    item.id !== updatedItemId || item.color !== updatedItemColor
+            );
             localStorage.setItem('cart', JSON.stringify(cart));
             article.remove();
             updateTotalQuantityAndPrice();
@@ -144,6 +146,10 @@ function handleDeleteItem(article) {
 /**
  * Updates the total quantity and price displayed in the cart.
  */
+/**
+ * Updates the total quantity and price displayed in the cart based on the cart items and product data.
+ * @param {Object} data - The product data used to calculate the total price.
+ */
 function updateTotalQuantityAndPrice() {
     let price = 0;
     let quantity = 0;
@@ -151,11 +157,20 @@ function updateTotalQuantityAndPrice() {
         totalItemQuantity.innerText = 0;
         totalItemPrice.innerText = 0;
     } else {
-        cart.forEach((item) => {
-            quantity += Number(item.quantity);
-            totalItemQuantity.innerText = quantity;
-            price += item.price * item.quantity;
-            totalItemPrice.innerText = price;
+        cart.forEach(async (item) => {
+            try {
+                const prodId = item.id;
+                const response = await fetch(
+                    `http://localhost:3000/api/products/${prodId}`
+                );
+                const data = await response.json();
+                quantity += Number(item.quantity);
+                totalItemQuantity.innerText = quantity;
+                price += data.price * item.quantity;
+                totalItemPrice.innerText = price;
+            } catch (error) {
+                console.log(error);
+            }
         });
     }
 }
@@ -248,6 +263,8 @@ function handleUserInput(event, field) {
 function handleSubmitForm(event) {
     event.preventDefault();
     // post payload to api
+    // retrieve order number
+    // navigate to confirmation.html
     firstName.value = '';
     lastName.value = '';
     address.value = '';
