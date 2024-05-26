@@ -299,8 +299,19 @@ const retrieveOrderNumber = async (payload) => {
         );
         const data = await fetchResponse.json();
         console.log(data);
+        const orderId = data.orderId;
+        navigateToConfirmationPage(orderId);
         return data;
     } catch (e) {
         return e;
     }
+};
+
+const baseUrl = 'http://127.0.0.1:5500/front/html/';
+
+const navigateToConfirmationPage = (orderId) => {
+    const obj = { orderId: orderId };
+    const searchParams = new URLSearchParams(obj);
+    const queryString = searchParams.toString();
+    window.location.href = baseUrl + 'confirmation.html?' + queryString;
 };
