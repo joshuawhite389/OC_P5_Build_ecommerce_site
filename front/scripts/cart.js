@@ -175,7 +175,7 @@ function updateTotalQuantityAndPrice() {
     }
 }
 
-let userInput = {
+let contact = {
     firstName,
     lastName,
     address,
@@ -250,8 +250,8 @@ function validateEmail(email) {
  */
 
 function handleUserInput(event, field) {
-    userInput = {
-        ...userInput,
+    contact = {
+        ...contact,
         [field]: event.target.value,
     };
 }
@@ -262,6 +262,25 @@ function handleUserInput(event, field) {
  */
 function handleSubmitForm(event) {
     event.preventDefault();
+    let products = [];
+    cart.forEach((item) => {
+        products.push(item.id);
+    });
+    const postObject = {
+        contact,
+        products,
+    };
+
+    const postPayload = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postObject),
+    };
+
+    retrieveOrderNumber(postPayload);
+
     // post payload to api
     // retrieve order number
     // navigate to confirmation.html
@@ -271,3 +290,17 @@ function handleSubmitForm(event) {
     city.value = '';
     email.value = '';
 }
+
+const retrieveOrderNumber = async (payload) => {
+    try {
+        const fetchResponse = await fetch(
+            `http://localhost:3000/api/products/order`,
+            payload
+        );
+        const data = await fetchResponse.json();
+        console.log(data);
+        return data;
+    } catch (e) {
+        return e;
+    }
+};
