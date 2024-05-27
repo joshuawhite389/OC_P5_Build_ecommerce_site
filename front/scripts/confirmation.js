@@ -1,3 +1,7 @@
+/**
+ * Retrieves the order ID from the URL query parameters.
+ * @returns {string} The order ID extracted from the URL.
+ */
 const getOrderId = () => {
     const url = window.location.href;
     const searchParams = new URL(url).searchParams;
@@ -7,6 +11,9 @@ const getOrderId = () => {
     return orderId;
 };
 
+/**
+ * Populates the order ID in the specified span element on the page.
+ */
 const populateOrderId = () => {
     const orderIdSpan = document.getElementById('orderId');
     const orderId = getOrderId();

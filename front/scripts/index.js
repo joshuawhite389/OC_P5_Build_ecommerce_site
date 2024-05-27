@@ -2,7 +2,9 @@
 const itemsSection = document.getElementById('items');
 const baseUrl = 'http://127.0.0.1:5500/front/html/';
 
-// fetch data from products end point
+/**
+ * Event listener that triggers when the DOM content is fully loaded. Fetches product data from the server and loads the products onto the webpage.
+ */
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch('http://localhost:3000/api/products');
@@ -13,8 +15,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// function to populate products into index.html page
-
+/**
+ * Loads products onto the webpage based on the provided data.
+ * @param {Array} data - The array of product data to be displayed.
+ */
 const loadProducts = (data) => {
     data.forEach((element) => {
         const productLink = document.createElement('a');
@@ -42,6 +46,11 @@ const loadProducts = (data) => {
         );
     });
 };
+
+/**
+ * Handles the selection of a product and navigates to the product page with the selected product ID.
+ * @param {string} id - The ID of the selected product.
+ */
 
 const handleMakeProductSelection = (id) => {
     const obj = { id: id };

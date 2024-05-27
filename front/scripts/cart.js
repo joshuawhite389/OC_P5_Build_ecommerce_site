@@ -280,10 +280,6 @@ function handleSubmitForm(event) {
     };
 
     retrieveOrderNumber(postPayload);
-
-    // post payload to api
-    // retrieve order number
-    // navigate to confirmation.html
     firstName.value = '';
     lastName.value = '';
     address.value = '';
@@ -291,6 +287,11 @@ function handleSubmitForm(event) {
     email.value = '';
 }
 
+/**
+ * Retrieves the order number from the server using the provided payload.
+ * @param {Object} payload - The payload to be sent with the fetch request.
+ * @returns {Promise<Object>} A promise that resolves to the data containing the order number.
+ */
 const retrieveOrderNumber = async (payload) => {
     try {
         const fetchResponse = await fetch(
@@ -309,6 +310,10 @@ const retrieveOrderNumber = async (payload) => {
 
 const baseUrl = 'http://127.0.0.1:5500/front/html/';
 
+/**
+ * Navigates to the confirmation page with the provided order ID.
+ * @param {string} orderId - The order ID to be included in the URL query string.
+ */
 const navigateToConfirmationPage = (orderId) => {
     const obj = { orderId: orderId };
     const searchParams = new URLSearchParams(obj);

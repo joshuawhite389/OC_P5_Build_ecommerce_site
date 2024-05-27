@@ -1,4 +1,7 @@
-// helper function to get product id from URL search params
+/**
+ * Retrieves the product ID from the URL query parameters.
+ * @returns {string} The product ID extracted from the URL.
+ */
 const getProductId = () => {
     const url = window.location.href;
     const searchParams = new URL(url).searchParams;
@@ -22,10 +25,6 @@ let product = {
     color: '',
 };
 
-/*
-    DO NOT STORE PRICE IN LOCAL STORAGE
-*/
-
 //event listeners
 addToCartBtn.addEventListener('click', () => {
     addProductToCart();
@@ -43,7 +42,9 @@ quantity.addEventListener('change', () => {
     };
 });
 
-// fetch data from product that was selected
+/**
+ * Event listener that triggers when the DOM content is fully loaded. Fetches product data based on the product ID from the server and loads the product information onto the webpage.
+ */
 document.addEventListener('DOMContentLoaded', async () => {
     const prodId = getProductId();
     try {
@@ -57,7 +58,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// populate product page with info from product api
+/**
+ * Loads product information onto the webpage based on the provided data.
+ * @param {Object} data - The object containing product information to be displayed.
+ */
 const loadProductInfo = (data) => {
     const productImg = document.createElement('img');
 
@@ -72,12 +76,15 @@ const loadProductInfo = (data) => {
     productImg.alt = data.altTxt;
     title.innerText = data.name;
     price.innerText = data.price;
-    
+
     description.innerText = data.description;
 
     imgContainer.appendChild(productImg);
 };
 
+/**
+ * Adds the product to the cart in the local storage after validation.
+ */
 const addProductToCart = () => {
     //add product to local storage after validating
     if (product.quantity > 0 && product.color != '') {
