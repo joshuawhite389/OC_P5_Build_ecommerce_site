@@ -230,9 +230,24 @@ function inputValidation(event, field) {
     if (event.target.value === '') {
         errorMsg.innerText = 'Field must not be blank';
     } else if (field !== 'email') {
-        errorMsg.innerText = '';
+        //if field does not equal email or address, validate that it doesn't have numbers
+        if (!validateStringFields(event.target.value)) {
+            errorMsg.innerText = 'Field must not contain numbers';
+        } else {
+            errorMsg.innerText = '';
+        }
     }
 }
+
+/**
+ * Checks if the input string contains any numbers.
+ * @param {string} inputString - The string to be checked for numbers.
+ * @returns {boolean} True if the string contains no numbers, false otherwise.
+ */
+const validateStringFields = (inputString) => {
+    const regex = /\D+/; // Matches any character that is not a number
+    return regex.test(inputString);
+};
 
 /**
  * Validates an email address using a regular expression.
