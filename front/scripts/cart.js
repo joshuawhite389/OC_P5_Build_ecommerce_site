@@ -9,6 +9,8 @@ let city = document.getElementById('city');
 let email = document.getElementById('email');
 let orderBtn = document.getElementById('order');
 
+const contactFormFields = [firstName, lastName, address, city, email];
+
 getCustomerInput();
 
 /**
@@ -143,6 +145,11 @@ function handleDeleteItem(article) {
     });
 }
 
+function clearCartAfterOrder() {
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
 /**
  * Updates the total quantity and price displayed in the cart.
  */
@@ -209,8 +216,30 @@ function getCustomerInput() {
     city.addEventListener('blur', (event) => inputValidation(event, 'city'));
     email.addEventListener('input', (event) => handleUserInput(event, 'email'));
     email.addEventListener('blur', (event) => inputValidation(event, 'email'));
-    orderBtn.addEventListener('click', (event) => handleSubmitForm(event));
+    orderBtn.addEventListener('click', (event) =>
+        validateContactFormFields(event)
+    );
 }
+
+/**
+ * Validates whether all the contact form fields are filled out or not when pressing order button.
+ * @returns {boolean} True if all contact form fields are filled out, false otherwise.
+ */
+const validateContactFormFields = (event) => {
+    event.preventDefault();
+    let allFieldsFilled = true;
+    contactFormFields.forEach((field) => {
+        if (field.value.trim() === '') {
+            allFieldsFilled = false;
+            console.log(event.target.value);
+        }
+    });
+    if (allFieldsFilled) {
+        handleSubmitForm();
+    }
+
+    return allFieldsFilled;
+};
 
 /**
  * Validates the input for the specified field and displays error messages if needed.
@@ -275,8 +304,7 @@ function handleUserInput(event, field) {
  * Handles the form submission event for the customer details form.
  * @param {Event} event - The form submission event.
  */
-function handleSubmitForm(event) {
-    event.preventDefault();
+function handleSubmitForm() {
     let products = [];
     cart.forEach((item) => {
         products.push(item.id);
@@ -295,11 +323,6 @@ function handleSubmitForm(event) {
     };
 
     retrieveOrderNumber(postPayload);
-    firstName.value = '';
-    lastName.value = '';
-    address.value = '';
-    city.value = '';
-    email.value = '';
 }
 
 /**
@@ -314,9 +337,9 @@ const retrieveOrderNumber = async (payload) => {
             payload
         );
         const data = await fetchResponse.json();
-        console.log(data);
         const orderId = data.orderId;
         navigateToConfirmationPage(orderId);
+        clearCartAfterOrder();
         return data;
     } catch (e) {
         return e;
