@@ -27,7 +27,6 @@ const loadProducts = (data) => {
         const productName = document.createElement('h3');
         const productDescription = document.createElement('p');
 
-        // productLink.href = "./product.html?";
         productImage.src = element.imageUrl;
         productImage.alt = element.altTxt;
         productName.classList.add('productName');

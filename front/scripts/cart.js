@@ -151,9 +151,6 @@ function clearCartAfterOrder() {
 }
 
 /**
- * Updates the total quantity and price displayed in the cart.
- */
-/**
  * Updates the total quantity and price displayed in the cart based on the cart items and product data.
  * @param {Object} data - The product data used to calculate the total price.
  */
@@ -163,6 +160,7 @@ function updateTotalQuantityAndPrice() {
     if (cart.length === 0) {
         totalItemQuantity.innerText = 0;
         totalItemPrice.innerText = 0;
+        
     } else {
         cart.forEach(async (item) => {
             try {
@@ -231,10 +229,9 @@ const validateContactFormFields = (event) => {
     contactFormFields.forEach((field) => {
         if (field.value.trim() === '') {
             allFieldsFilled = false;
-            console.log(event.target.value);
         }
     });
-    if (allFieldsFilled) {
+    if (allFieldsFilled && formIsValid) {
         handleSubmitForm();
     }
 
@@ -247,25 +244,38 @@ const validateContactFormFields = (event) => {
  * @param {string} field - The field being validated.
  */
 
+let formIsValid = false;
+console.log(cart.length)
 function inputValidation(event, field) {
-    const errorMsg = document.getElementById(`${field}ErrorMsg`);
-    if (field === 'email') {
-        if (!validateEmail(event.target.value)) {
-            errorMsg.innerText = 'Please enter a valid email';
-        } else {
-            errorMsg.innerText = '';
+    if(cart.length === 0) {
+        formIsValid = false;
+    } else {
+
+        const errorMsg = document.getElementById(`${field}ErrorMsg`);
+        if (field === 'email') {
+            if (!validateEmail(event.target.value)) {
+                errorMsg.innerText = 'Please enter a valid email';
+                formIsValid = false;
+            } else {
+                errorMsg.innerText = '';
+                formIsValid = true;
+            }
+        }
+        if (event.target.value === '') {
+            errorMsg.innerText = 'Field must not be blank';
+            formIsValid = false;
+        } else if (field !== 'email') {
+            //if field does not equal email or address, validate that it doesn't have numbers
+            if (!validateStringFields(event.target.value)) {
+                errorMsg.innerText = 'Field must not contain numbers';
+                formIsValid = false;
+            } else {
+                errorMsg.innerText = '';
+                formIsValid = true;
+            }
         }
     }
-    if (event.target.value === '') {
-        errorMsg.innerText = 'Field must not be blank';
-    } else if (field !== 'email') {
-        //if field does not equal email or address, validate that it doesn't have numbers
-        if (!validateStringFields(event.target.value)) {
-            errorMsg.innerText = 'Field must not contain numbers';
-        } else {
-            errorMsg.innerText = '';
-        }
-    }
+    
 }
 
 /**
